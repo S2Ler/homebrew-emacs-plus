@@ -133,7 +133,9 @@ class EmacsPlusAT30 < EmacsBase
     args << "--without-compress-install" if build.without? "compress-install"
 
     ENV.append "CFLAGS", "-g -Og" if build.with? "debug"
-    ENV.append "CFLAGS", "-DFD_SETSIZE=10000 -DDARWIN_UNLIMITED_SELECT"
+    ENV.append "CFLAGS", "-DFD_SETSIZE=10000 -flto=auto -ffat-lto-objects -fstack-protector-strong -march=native -O2 -DDARWIN_UNLIMITED_SELECT"
+    ENV.append "CPPFLAGS", "-D_FORTIFY_SOURCE=2"
+    ENV.append "LDFLAGS", "-Wl,-Bsymbolic-functions -Wl,-z,relro"
 
     # Necessary for libgccjit library discovery
     if build.with? "native-comp"
